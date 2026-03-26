@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Snooker Game"
+version = "1.0.0"
+id = "artifacts/snooker-game"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24893
+
+[services.development]
+run = "pnpm --filter @workspace/snooker-game run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/snooker-game", "run", "build" ]
+publicDir = "artifacts/snooker-game/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24893"
+BASE_PATH = "/"
