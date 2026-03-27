@@ -1,0 +1,50 @@
+[
+  {
+    "id": "a1b2c3d4-0001-4000-8000-000000000001",
+    "position": 1,
+    "filepath": "src/pages/slides/TitleSlide.tsx",
+    "title": "How I Built It",
+    "description": "Title slide with hero snooker table image and presentation overview.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-0002-4000-8000-000000000002",
+    "position": 2,
+    "filepath": "src/pages/slides/FoundationSlide.tsx",
+    "title": "Stage 01 — The Foundation",
+    "description": "v1 initial build: table, physics, 22 balls, snooker rules.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-0003-4000-8000-000000000003",
+    "position": 3,
+    "filepath": "src/pages/slides/MathLayerSlide.tsx",
+    "title": "Stage 02 — Stats & Math Layer",
+    "description": "v2: shot angle display, pot accuracy formula, stats modal.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-0004-4000-8000-000000000004",
+    "position": 4,
+    "filepath": "src/pages/slides/SimplifiedSlide.tsx",
+    "title": "Stage 03 — Simplified",
+    "description": "v3: all logic in one file, leaner code, same full gameplay.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-0005-4000-8000-000000000005",
+    "position": 5,
+    "filepath": "src/pages/slides/ArchitectureSlide.tsx",
+    "title": "Before vs After",
+    "description": "Code architecture: 9 files collapsed into 2, 72% reduction.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-0006-4000-8000-000000000006",
+    "position": 6,
+    "filepath": "src/pages/slides/ClosingSlide.tsx",
+    "title": "What's Next",
+    "description": "Closing: key numbers, upcoming features, and the development philosophy.",
+    "speakerNotes": ""
+  }
+]
