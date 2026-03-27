@@ -41,13 +41,17 @@ export function createInitialBalls(): Ball[] {
   return balls;
 }
 
+function emptyStats() {
+  return { shotsTaken: 0, ballsPotted: 0, highestBreak: 0, fouls: 0 };
+}
+
 export function createInitialState(): GameState {
   return {
     balls: createInitialBalls(),
     phase: 'aiming',
     currentPlayer: 0,
     players: [
-      { name: 'Player 1', score: 0 },
+      { name: 'Neal Bhavsar', score: 0 },
       { name: 'Player 2', score: 0 },
     ],
     targetBall: 'red',
@@ -55,7 +59,7 @@ export function createInitialState(): GameState {
     inBreak: false,
     breakScore: 0,
     lastPottedColour: null,
-    message: "Player 1's turn — Pot a red ball",
+    message: "Neal Bhavsar's turn — Pot a red ball",
     foul: false,
     foulPoints: 0,
     winner: null,
@@ -64,5 +68,6 @@ export function createInitialState(): GameState {
     firstBallHit: null,
     redPottedThisShot: false,
     colourPottedThisShot: null,
+    stats: [emptyStats(), emptyStats()],
   };
 }

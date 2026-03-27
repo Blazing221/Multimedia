@@ -9,6 +9,7 @@ import { stepPhysics } from '../game/physics';
 import { renderTable } from '../game/renderer';
 import { processShot } from '../game/rules';
 import Scoreboard from './Scoreboard';
+import StatsPanel from './StatsPanel';
 
 export default function SnookerGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -25,6 +26,9 @@ export default function SnookerGame() {
   const [power, setPower] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ w: TABLE_WIDTH, h: TABLE_HEIGHT, scale: 1 });
+  // live aim angle shown to player in degrees
+  const [aimAngleDeg, setAimAngleDeg] = useState<number | null>(null);
+  const [showStats, setShowStats] = useState(false);
 
   useEffect(() => {
     function updateSize() {
@@ -110,8 +114,8 @@ export default function SnookerGame() {
 
   function isCueBallPlaceable(x: number, y: number, state: GameState): boolean {
     if (x > BAULK_LINE_X) return false;
-    if (x < PLAYFIELD_X + BALL_RADIUS || x > PLAYFIELD_X + PLAYFIELD_W - BALL_RADIUS) return false;
-    if (y < PLAYFIELD_Y + BALL_RADIUS || y > PLAYFIELD_Y + PLAYFIELD_H - BALL_RADIUS) return false;
+    if (x < PLAYFIELD_X + BALL_RADIUS || x > PLAYFIELD_X + TABLE_WIDTH - BALL_RADIUS) return false;
+    if (y < BALL_RADIUS || y > TABLE_HEIGHT - BALL_RADIUS) return false;
     for (const ball of state.balls) {
       if (!ball.onTable || ball.potted || ball.type === 'cue') continue;
       if (Math.hypot(ball.x - x, ball.y - y) < BALL_RADIUS * 2 + 2) return false;
@@ -122,9 +126,21 @@ export default function SnookerGame() {
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const pos = getCanvasPos(e);
     mouseRef.current = pos;
+
+    // update live angle display while aiming
+    const state = gameStateRef.current;
+    if (state.phase === 'aiming') {
+      const cueBall = state.balls.find(b => b.id === 'cue' && b.onTable && !b.potted);
+      if (cueBall) {
+        // convert radians to degrees (0-360, clockwise from right)
+        let deg = Math.atan2(pos.y - cueBall.y, pos.x - cueBall.x) * (180 / Math.PI);
+        if (deg < 0) deg += 360;
+        setAimAngleDeg(Math.round(deg));
+      }
+    }
   }, [getCanvasPos]);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+  const handleMouseDown = useCallback((_e: React.MouseEvent) => {
     const state = gameStateRef.current;
     if (state.phase === 'aiming') {
       setIsDragging(true);
@@ -182,14 +198,26 @@ export default function SnookerGame() {
     gameStateRef.current = fresh;
     firstHitTrackerRef.current = null;
     pottedThisShotRef.current = [];
+    setAimAngleDeg(null);
     setDisplayState({ ...fresh });
   };
+
+  // pot % for current player
+  const curStats = displayState.stats[displayState.currentPlayer];
+  const potPct = curStats.shotsTaken === 0
+    ? 0
+    : Math.round((curStats.ballsPotted / curStats.shotsTaken) * 100);
 
   return (
     <div className="snooker-container">
       <div className="game-header">
-        <h1 className="game-title">Snooker</h1>
-        <button className="new-game-btn" onClick={handleNewGame}>New Game</button>
+        <h1 className="game-title">Neal Bhavsar's Snooker</h1>
+        <div className="header-actions">
+          <button className="stats-btn" onClick={() => setShowStats(s => !s)}>
+            {showStats ? 'Hide Stats' : 'Stats'}
+          </button>
+          <button className="new-game-btn" onClick={handleNewGame}>New Game</button>
+        </div>
       </div>
 
       <Scoreboard state={displayState} />
@@ -202,17 +230,38 @@ export default function SnookerGame() {
       </div>
 
       {displayState.phase === 'aiming' && (
-        <div className="power-control">
-          <label>Shot Power: {power}%</label>
-          <input
-            type="range"
-            min="5"
-            max="100"
-            value={power}
-            onChange={(e) => setPower(Number(e.target.value))}
-          />
-          <div className="power-bar">
-            <div className="power-fill" style={{ width: `${power}%`, backgroundColor: `hsl(${120 - power}, 80%, 45%)` }} />
+        <div className="power-and-angle">
+          <div className="power-control">
+            <label>Power: {power}%</label>
+            <input
+              type="range"
+              min="5"
+              max="100"
+              value={power}
+              onChange={(e) => setPower(Number(e.target.value))}
+            />
+            <div className="power-bar">
+              <div className="power-fill" style={{ width: `${power}%`, backgroundColor: `hsl(${120 - power}, 80%, 45%)` }} />
+            </div>
+          </div>
+
+          <div className="angle-display">
+            <div className="angle-label">Shot Angle</div>
+            <div className="angle-value">{aimAngleDeg ?? '--'}°</div>
+            <div className="angle-compass">
+              <div
+                className="angle-needle"
+                style={{ transform: `rotate(${aimAngleDeg ?? 0}deg)` }}
+              />
+            </div>
+          </div>
+
+          <div className="pot-rate">
+            <div className="angle-label">Pot Rate</div>
+            <div className="angle-value">{potPct}%</div>
+            <div className="pot-bar">
+              <div className="pot-fill" style={{ width: `${potPct}%` }} />
+            </div>
           </div>
         </div>
       )}
@@ -233,6 +282,10 @@ export default function SnookerGame() {
           onMouseUp={handleMouseUp}
         />
       </div>
+
+      {showStats && (
+        <StatsPanel state={displayState} onClose={() => setShowStats(false)} />
+      )}
 
       {displayState.phase === 'game_over' && (
         <div className="game-over-overlay">

@@ -14,6 +14,9 @@ export function processShot(
   const next = { ...state };
   next.players = [{ ...state.players[0] }, { ...state.players[1] }];
   next.balls = state.balls.map(b => ({ ...b }));
+  next.stats = [{ ...state.stats[0] }, { ...state.stats[1] }];
+  // count shot for current player
+  next.stats[state.currentPlayer].shotsTaken += 1;
 
   const cueBall = next.balls.find(b => b.id === 'cue')!;
 
@@ -166,6 +169,7 @@ export function processShot(
     next.players[victim].score += foulValue;
     next.foul = true;
     next.foulPoints = foulValue;
+    next.stats[state.currentPlayer].fouls += 1;
     switchPlayer = true;
     message += `${foulValue} points to opponent. `;
     nextTarget = 'red';
@@ -178,6 +182,9 @@ export function processShot(
     if (scored > 0) {
       next.players[next.currentPlayer].score += scored;
       next.breakScore += scored;
+      // track balls potted (non-cue balls potted legitimately)
+      const legitPotted = pottedIds.filter(id => id !== 'cue').length;
+      next.stats[state.currentPlayer].ballsPotted += legitPotted;
     }
   }
 
@@ -185,8 +192,14 @@ export function processShot(
   next.targetBall = nextTarget;
 
   if (switchPlayer) {
+    // update highest break before resetting it
+    if (next.breakScore > next.stats[state.currentPlayer].highestBreak) {
+      next.stats[state.currentPlayer].highestBreak = next.breakScore;
+    }
     next.currentPlayer = next.currentPlayer === 0 ? 1 : 0;
     next.breakScore = 0;
+  } else if (next.breakScore > next.stats[state.currentPlayer].highestBreak) {
+    next.stats[state.currentPlayer].highestBreak = next.breakScore;
   }
 
   const allRedsPotted = next.balls.filter(b => b.type === 'red').every(b => !b.onTable || b.potted);

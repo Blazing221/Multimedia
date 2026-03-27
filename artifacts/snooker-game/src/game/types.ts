@@ -25,6 +25,13 @@ export interface Player {
   score: number;
 }
 
+export interface Stats {
+  shotsTaken: number;
+  ballsPotted: number;
+  highestBreak: number;
+  fouls: number;
+}
+
 export interface GameState {
   balls: Ball[];
   phase: GamePhase;
@@ -44,4 +51,5 @@ export interface GameState {
   firstBallHit: string | null;
   redPottedThisShot: boolean;
   colourPottedThisShot: string | null;
+  stats: [Stats, Stats];
 }

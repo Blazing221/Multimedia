@@ -240,8 +240,8 @@ body {
   color: #ccc;
 }
 
-/* Power control */
-.power-control {
+/* Power + angle row */
+.power-and-angle {
   width: 100%;
   max-width: 1800px;
   display: flex;
@@ -253,11 +253,18 @@ body {
   padding: 8px 16px;
 }
 
+.power-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
 .power-control label {
   font-size: 0.85rem;
   color: #888;
   white-space: nowrap;
-  min-width: 140px;
+  min-width: 90px;
 }
 
 .power-control input[type="range"] {
@@ -267,8 +274,8 @@ body {
 }
 
 .power-bar {
-  width: 120px;
-  height: 10px;
+  width: 80px;
+  height: 8px;
   background: #333;
   border-radius: 5px;
   overflow: hidden;
@@ -278,6 +285,197 @@ body {
   height: 100%;
   border-radius: 5px;
   transition: width 0.1s, background-color 0.2s;
+}
+
+/* Angle display */
+.angle-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 0 16px;
+  border-left: 1px solid #2a2a2a;
+  border-right: 1px solid #2a2a2a;
+}
+
+.angle-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #555;
+}
+
+.angle-value {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #d4af37;
+  font-variant-numeric: tabular-nums;
+  min-width: 55px;
+  text-align: center;
+}
+
+.angle-compass {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #333;
+  position: relative;
+  background: #0d0d0d;
+}
+
+.angle-needle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 2px;
+  background: #d4af37;
+  transform-origin: 0% 50%;
+  transform: rotate(0deg);
+  border-radius: 1px;
+}
+
+/* Pot rate */
+.pot-rate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 0 16px;
+}
+
+.pot-bar {
+  width: 60px;
+  height: 6px;
+  background: #333;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.pot-fill {
+  height: 100%;
+  background: #3a9c5f;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+/* Header actions */
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.stats-btn {
+  background: transparent;
+  color: #d4af37;
+  border: 1px solid #d4af37;
+  padding: 7px 16px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.2s;
+}
+
+.stats-btn:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+/* Stats panel */
+.stats-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.stats-panel {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 24px 30px;
+  min-width: 380px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.stats-header h3 {
+  color: #d4af37;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.stats-close {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.stats-close:hover { color: #fff; }
+
+.stats-players-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stats-player-name {
+  font-size: 0.8rem;
+  color: #d4af37;
+  text-align: center;
+  font-weight: bold;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #1e1e1e;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.stat-val {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+}
+
+.stats-math-note {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 8px 10px;
+  background: rgba(212,175,55,0.06);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: #666;
+  font-style: italic;
 }
 
 .placement-hint {
